@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class reader {
+public class Lector {
     public String leertxt(String direccion){
         String texto = "";
 
@@ -10,14 +10,14 @@ public class reader {
             String temp = "";
             String bfReader = "";
 
-            while ((bfReader = bf.readLine() != null){
-                temp = temp+bfReader;
+            while ((bfReader = bf.readLine()) != null){
+                temp = temp+bfReader+"\n";
             }
 
             texto = temp;
         } catch (Exception e){
-            System.err.println("No se encontró archivo");
+            System.err.println("No se encontró el archivo");
         }
-        return texto
+        return texto;
     }
 }
