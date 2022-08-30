@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Lector {
     public String leertxt(String direccion){
@@ -20,4 +22,38 @@ public class Lector {
         }
         return texto;
     }
+
+
+
+    /**
+     * @param route route of .txt which has a program
+     * @return queue that contains all of the lines of the program
+     * Than method will be used if prog/gorp is always used
+     */
+    public Queue<String> readprog(String route){
+
+    Queue<String> strings = new LinkedList<String>();
+    /* QUEUE: 
+    To add .add
+    To get .poll
+    To clean .clear
+    To get without delete head of queue .peek
+    */
+
+    try {
+        BufferedReader bf = new BufferedReader(new FileReader(route));
+        String temp = "";
+        while((temp = bf.readLine()) != "GORP"){
+            if (temp != "PROG"){
+                strings.add(temp);
+            }   
+        }
+
+    }catch (Exception e) {
+        System.err.println("The file can't be found");
+    }
+    return strings;
+
+    }
+    
 }
