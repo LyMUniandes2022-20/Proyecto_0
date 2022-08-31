@@ -13,7 +13,8 @@ public class Lector {
             String bfReader = "";
 
             while ((bfReader = bf.readLine()) != null){
-                temp = temp+bfReader+"\n";
+                temp = temp+bfReader;
+                System.out.println(temp);
             }
 
             texto = temp;
