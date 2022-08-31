@@ -67,7 +67,7 @@ public class Lexer {
      */
     public void interpreter(){
       //all of strings in the queue will iterate
-      for (int i = 0 ; i<= strings.size(); i++){
+      for (int i = 1 ; i<= strings.size(); i++){
 
         // They are the array of tokens which we will sent to the parser
         ArrayList<String> toSentToParser = new ArrayList<String>();
@@ -94,16 +94,22 @@ public class Lexer {
           }else{
             // if the character is a separator, temp should be a token 
             
-            //first, if the separator is not a " " , they must stay into the array
-            if (toCompare != " "){
-              toSentToParser.add(toCompare);
-            }
 
-            // then, we will be sure of the temp is not empty, because you can have " " before to start an code line
+
+            // first, we will be sure of the temp is not empty, because you can have " " before to start an code line
             if (temp != ""){
+              if (reservedWords.contains(temp)){
               toSentToParser.add(temp);
               temp = "";
+             }else{
+              // HERE WE WILL SENT AN ERROR CUZ TEMP IS NOT A RESERVED WORD
+             }
             }
+
+            //then, if the separator is not a " " , they must stay into the array
+            if (toCompare != " "){
+              toSentToParser.add(toCompare);
+            }            
           }
 
         }
@@ -114,7 +120,4 @@ public class Lexer {
     }
     }
 
-
-
-    
 
