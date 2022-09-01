@@ -1,3 +1,4 @@
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -10,6 +11,7 @@ public class Lexer {
    */
 	public Lexer() {
 		setReservedWords();
+    setSeparators();
 	}
 	
     /*
@@ -62,6 +64,14 @@ public class Lexer {
         reservedWords.add("not");
     }
     
+    public ArrayList<String> getReservedWords(){
+      return this.reservedWords;
+    }
+
+    public ArrayList<String> getSeparator(){
+      return this.separators;
+    }
+
     /*
      * 
      */
