@@ -1,11 +1,13 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Lector {
-    public String leertxt(String direccion){
+    public ArrayList<String> leertxt(String direccion){
         String texto = "";
+        ArrayList<String> txtLines = new ArrayList<>();
 
         try {
             BufferedReader bf = new BufferedReader(new FileReader(direccion));
@@ -14,16 +16,14 @@ public class Lector {
 
             while ((bfReader = bf.readLine()) != null){
                 temp = temp+bfReader+"\n";
+                txtLines.add(bfReader);
             }
-
             texto = temp;
         } catch (Exception e){
             System.err.println("No se encontró el archivo");
         }
-        return texto;
+        return txtLines;
     }
-
-
 
     /**
      * @param route route of .txt which has a program
@@ -32,27 +32,27 @@ public class Lector {
      */
     public Queue<String> readprog(String route){
 
-    Queue<String> strings = new LinkedList<String>();
-    /* QUEUE: 
-    To add .add
-    To get .poll
-    To clean .clear
-    To get without delete head of queue .peek
-    */
+        Queue<String> strings = new LinkedList<String>();
+        /* QUEUE: 
+        To add .add
+        To get .poll
+        To clean .clear
+        To get without delete head of queue .peek
+        */
 
-    try {
-        BufferedReader bf = new BufferedReader(new FileReader(route));
-        String temp = "";
-        while((temp = bf.readLine()) != "GORP"){
-            if (temp != "PROG"){
-                strings.add(temp);
-            }   
+        try {
+            BufferedReader bf = new BufferedReader(new FileReader(route));
+            String temp = "";
+            while((temp = bf.readLine()) != "GORP"){
+                if (temp != "PROG"){
+                    strings.add(temp);
+                }   
+            }
+
+        }catch (Exception e) {
+            System.err.println("The file can't be found");
         }
-
-    }catch (Exception e) {
-        System.err.println("The file can't be found");
-    }
-    return strings;
+        return strings;
 
     }
     
