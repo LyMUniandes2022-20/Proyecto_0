@@ -22,26 +22,27 @@ public class Lector {
         To get without delete head of queue .peek
         */
 
-    try {
-        BufferedReader bf = new BufferedReader(new FileReader(route));
-        String temp = "";
-        while((temp = bf.readLine()) != "GORP"){
-            if (temp != "PROG" && temp != ""){
-                strings.add(temp);
-            }   
+        try{
+            BufferedReader bf = new BufferedReader(new FileReader(route));
+            String temp = "";
+            while(!(temp = bf.readLine()).equals("GORP")){
+                if (!temp.equals("PROG") && !temp.equals("")){
+                    strings.add(temp);
+                }   
+            }
+        }catch(Exception e){
+            //Nada
         }
         return strings;
-
     }
-    
 
     /**
      * This method will be send the chains to lexer.
      * @param chains the chains which has already read by the methos
      */
-    public void sentToLexer(Queue<String> chains, Lexer lex){
+    public void sentToLexer(Queue<String> chains, Lexer lex, Parser parser){
 
-        lex.interpreter(chains);
+        lex.interpreter(chains, parser);
 
 
     }

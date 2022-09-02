@@ -12,9 +12,9 @@ public class Consola {
         Consola consola = new Consola();
         Lector reader = new Lector();
         Lexer lex = new Lexer();
+        Parser parser = new Parser();
         consola.setLex(lex);
-
-        reader.sentToLexer(reader.readprog("data\\program.txt"), lex);
+        reader.sentToLexer(reader.readprog("data\\program.txt"), lex, parser);
 
 
 
