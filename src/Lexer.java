@@ -4,14 +4,12 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Lexer {
-
-
   /**
    * Constructor
    */
+
 	public Lexer() {
-		setReservedWords();
-    setSeparators();
+		setSeparators();
 	}
 	
     /*
@@ -26,46 +24,7 @@ public class Lexer {
       separators.add(",");
       separators.add("{");
       separators.add("}");
-    }
-
-
-    /*
-     strings: contains all chains which lector was reading
-     */
-    Queue<String> strings;
-
-    /*
-    reservedWords : are used how reserved words in our language, is an ArrayList cuz using "PROC" the user can add new reserved words.
-    */
-    private ArrayList<String> reservedWords = new ArrayList<String>();
-    public void setReservedWords() {
-        reservedWords.add("var");
-        reservedWords.add("PROC"); //Not yet
-        reservedWords.add("CORP");
-        reservedWords.add("walk");
-        reservedWords.add("jump");
-        reservedWords.add("jumpTo");
-        reservedWords.add("veer");
-        reservedWords.add("look");
-        reservedWords.add("drop");
-        reservedWords.add("grab");
-        reservedWords.add("get");
-        reservedWords.add("free");
-        reservedWords.add("pop");
-        reservedWords.add("walk");
-        reservedWords.add("if");
-        reservedWords.add("else");
-        reservedWords.add("while");
-        reservedWords.add("do");
-        reservedWords.add("isfacing");
-        reservedWords.add("isValid");
-        reservedWords.add("drop");
-        reservedWords.add("canWalk");
-        reservedWords.add("not");
-    }
-    
-    public ArrayList<String> getReservedWords(){
-      return this.reservedWords;
+      separators.add(";");
     }
 
     public ArrayList<String> getSeparator(){
@@ -75,14 +34,13 @@ public class Lexer {
     /*
      * 
      */
-    public void interpreter(){
+    public void interpreter(Queue<String> strings, Parser parser){
       //all of strings in the queue will iterate
-      for (int i = 1 ; i<= strings.size(); i++){
 
+      for (int i = 1 ; i<= strings.size(); i++){
+        
         // They are the array of tokens which we will sent to the parser
         ArrayList<String> toSentToParser = new ArrayList<String>();
-
-        
         // get the head of the queue
         String chain = strings.poll();
         // convert the chain into a char []
@@ -106,18 +64,15 @@ public class Lexer {
             
 
 
-            // first, we will be sure of the temp is not empty, because you can have " " before to start an code line
-            if (temp != ""){
-              if (reservedWords.contains(temp)){
+            // first, we will be sure of  temp is not empty, because you can have " " before to start an code line
+            if (temp != ""){  
               toSentToParser.add(temp);
               temp = "";
-             }else{
-              // HERE WE WILL SENT AN ERROR CUZ TEMP IS NOT A RESERVED WORD
-             }
+
             }
 
             //then, if the separator is not a " " , they must stay into the array
-            if (toCompare != " "){
+            if (!toCompare.equals(" ")){
               toSentToParser.add(toCompare);
             }            
           }
@@ -125,6 +80,7 @@ public class Lexer {
         }
 
         // HERE THE ARRAY WILL BE SENT TO A PARSER
+        parser.verifier(toSentToParser);
       }
 
     }

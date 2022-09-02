@@ -5,25 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Lector {
-    public ArrayList<String> leertxt(String direccion){
-        String texto = "";
-        ArrayList<String> txtLines = new ArrayList<>();
 
-        try {
-            BufferedReader bf = new BufferedReader(new FileReader(direccion));
-            String temp = "";
-            String bfReader = "";
-
-            while ((bfReader = bf.readLine()) != null){
-                temp = temp+bfReader+"\n";
-                txtLines.add(bfReader);
-            }
-            texto = temp;
-        } catch (Exception e){
-            System.err.println("No se encontró el archivo");
-        }
-        return txtLines;
-    }
 
     /**
      * @param route route of .txt which has a program
@@ -40,20 +22,31 @@ public class Lector {
         To get without delete head of queue .peek
         */
 
-        try {
+        try{
             BufferedReader bf = new BufferedReader(new FileReader(route));
             String temp = "";
-            while((temp = bf.readLine()) != "GORP"){
-                if (temp != "PROG"){
+            while(!(temp = bf.readLine()).equals("GORP")){
+                if (!temp.equals("PROG") && !temp.equals("")){
                     strings.add(temp);
                 }   
             }
-
-        }catch (Exception e) {
-            System.err.println("The file can't be found");
+        }catch(Exception e){
+            //Nada
         }
         return strings;
+    }
+
+    /**
+     * This method will be send the chains to lexer.
+     * @param chains the chains which has already read by the methos
+     */
+    public void sentToLexer(Queue<String> chains, Lexer lex, Parser parser){
+
+        lex.interpreter(chains, parser);
+
 
     }
+
+
     
 }
