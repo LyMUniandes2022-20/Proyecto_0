@@ -83,10 +83,7 @@ public class Parser {
 
         //add the variables to the language
         if(tokens.get(0).equals("var")){
-            for (int i = 1; i < tokens.size(); i++) {
-                addVariables(tokens.get(i));
-                i+=1;
-            }
+            return checkVarLine (tokens);
         }
 
         //add the name of the parameters to the language
@@ -143,5 +140,40 @@ public class Parser {
         }
 
         return okGrammar;
+    }
+
+    /**
+     * @param line the arraylist of tokens of one line
+     * @return return an boolean, true is if the line are syntactical correct, false is the contrary
+     */
+    private boolean checkVarLine(ArrayList<String> line){
+
+        boolean isCorrect = true;
+
+        // Isn't necesary to know the first token, that are "var"
+        line.remove(0);
+
+        // Verify if the last token of a line are ";"
+        if (!line.get(line.size()-1).equals(";")){
+            return false; 
+        }else{
+            // If the line containst that character, will be clear of the array because that would be an inconvenent 
+            line.remove(line.size()-1);
+        }
+
+        // Verify if the unpair tokens of a line are ","
+        for (int i = 1; i < line.size(); i++) {
+            if (!line.get(i).equals(",")){
+                return false;
+            }
+            i+=1;
+        }
+
+        //Add the new reserved tokens of the var definition
+        for (int i = 0; i < line.size(); i++) {
+            addVariables(line.get(i));
+        i+=1;
+        }
+        return isCorrect;
     }
 }
