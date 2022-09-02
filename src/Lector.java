@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -13,38 +14,35 @@ public class Lector {
      */
     public Queue<String> readprog(String route){
 
-    Queue<String> strings = new LinkedList<String>();
-    /* QUEUE: 
-    To add .add
-    To get .poll
-    To clean .clear
-    To get without delete head of queue .peek
-    */
+        Queue<String> strings = new LinkedList<String>();
+        /* QUEUE: 
+        To add .add
+        To get .poll
+        To clean .clear
+        To get without delete head of queue .peek
+        */
 
-    try {
-        BufferedReader bf = new BufferedReader(new FileReader(route));
-        String temp = "";
-        while((temp = bf.readLine()) != "GORP"){
-            if (temp != "PROG" && temp != ""){
-                strings.add(temp);
-            }   
+        try{
+            BufferedReader bf = new BufferedReader(new FileReader(route));
+            String temp = "";
+            while(!(temp = bf.readLine()).equals("GORP")){
+                if (!temp.equals("PROG") && !temp.equals("")){
+                    strings.add(temp);
+                }   
+            }
+        }catch(Exception e){
+            //Nada
         }
-
-    }catch (Exception e) {
-        System.err.println("The file can't be found");
+        return strings;
     }
-    return strings;
-
-    }
-    
 
     /**
      * This method will be send the chains to lexer.
      * @param chains the chains which has already read by the methos
      */
-    public void sentToLexer(Queue<String> chains, Lexer lex){
+    public void sentToLexer(Queue<String> chains, Lexer lex, Parser parser){
 
-        lex.interpreter(chains);
+        lex.interpreter(chains, parser);
 
 
     }

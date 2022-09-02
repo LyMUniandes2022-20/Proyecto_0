@@ -1,13 +1,13 @@
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Lexer {
-
-
   /**
    * Constructor
    */
+
 	public Lexer() {
 		setSeparators();
 	}
@@ -26,18 +26,21 @@ public class Lexer {
       separators.add("}");
       separators.add(";");
     }
-    
+
+    public ArrayList<String> getSeparator(){
+      return this.separators;
+    }
+
     /*
      * 
      */
-    public void interpreter(Queue<String> strings){
+    public void interpreter(Queue<String> strings, Parser parser){
       //all of strings in the queue will iterate
-      for (int i = 1 ; i<= strings.size(); i++){
 
+      for (int i = 1 ; i<= strings.size(); i++){
+        
         // They are the array of tokens which we will sent to the parser
         ArrayList<String> toSentToParser = new ArrayList<String>();
-
-        
         // get the head of the queue
         String chain = strings.poll();
         // convert the chain into a char []
@@ -69,7 +72,7 @@ public class Lexer {
             }
 
             //then, if the separator is not a " " , they must stay into the array
-            if (toCompare != " "){
+            if (!toCompare.equals(" ")){
               toSentToParser.add(toCompare);
             }            
           }
@@ -77,6 +80,7 @@ public class Lexer {
         }
 
         // HERE THE ARRAY WILL BE SENT TO A PARSER
+        parser.verifier(toSentToParser);
       }
 
     }
