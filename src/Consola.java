@@ -2,6 +2,10 @@ public class Consola {
 
     private Lexer lex;
 
+    public void setLex(Lexer lex) {
+        this.lex = lex;
+    }
+
     public static void main(String[] args) {
         Consola consola = new Consola();
         Lector reader = new Lector();
@@ -14,7 +18,5 @@ public class Consola {
 
     }
     
-    public void setLex(Lexer lex) {
-        this.lex = lex;
-    }
+
 }

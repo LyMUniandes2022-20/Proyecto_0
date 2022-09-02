@@ -35,14 +35,24 @@ public class Parser {
         reservedWords.add("repeatTimes");
     }
 
+    // The parenthesis should to verify line to line
     private int openparenthesis = 0;
     private int closeparenthesis = 0;
 
+
+    // The bracket should be verified at the final line
     private int openbrackets = 0;
     private int closebrackets = 0;
 
+    // Verify if a proc has already open
+    private boolean procWard = false; 
+
     public void verifyLine(ArrayList<String> tokens){
+
+        
         
 
     }
 }
+
+

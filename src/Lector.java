@@ -25,7 +25,7 @@ public class Lector {
         BufferedReader bf = new BufferedReader(new FileReader(route));
         String temp = "";
         while((temp = bf.readLine()) != "GORP"){
-            if (temp != "PROG"){
+            if (temp != "PROG" && temp != ""){
                 strings.add(temp);
             }   
         }
