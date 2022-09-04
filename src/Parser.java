@@ -88,6 +88,8 @@ public class Parser {
             boolean checkVar =  checkVarLine (tokens);
             return checkVar;
 
+        }
+
         //add the name of the parameters to the language
         if(tokens.get(0).equals("PROC")){
             for (int i = 3; i < tokens.size(); i++) {
