@@ -7,7 +7,6 @@ public class Parser {
     private Lexer lexer;
     private ArrayList<String> commandsN = new ArrayList<>();
     private ArrayList<String> variablesCreated = new ArrayList<>();
-    private boolean newVarWard = false;
 
 
     public Parser(){
@@ -90,8 +89,7 @@ public class Parser {
 
         //add the name of the parameters to the language
         if(tokens.get(0).equals("PROC")){
-            for (int i = 3; i < tokens.size(); i++) {
-                
+            for (int i = 3; i < tokens.size(); i++) {                
                 if(lexer.getSeparator().contains(tokens.get(i))){
                     break;
                 } else {
@@ -178,7 +176,7 @@ public class Parser {
         //Add the new reserved tokens of the var definition
         for (int i = 0; i < line.size(); i++) {
             addVariables(line.get(i));
-        i+=1;
+            i+=1;
         }
         return isCorrect;
     }
