@@ -84,7 +84,11 @@ public class Parser {
 
         //add the variables to the language
         if(tokens.get(0).equals("var")){
-            return checkVarLine (tokens);
+
+            boolean checkVar =  checkVarLine (tokens);
+            if(!checkVar){
+                return checkVar;
+            }
         }
 
         //add the name of the parameters to the language
