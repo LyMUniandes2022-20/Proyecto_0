@@ -86,10 +86,7 @@ public class Parser {
         if(tokens.get(0).equals("var")){
 
             boolean checkVar =  checkVarLine (tokens);
-            if(!checkVar){
-                return checkVar;
-            }
-        }
+            return checkVar;
 
         //add the name of the parameters to the language
         if(tokens.get(0).equals("PROC")){
