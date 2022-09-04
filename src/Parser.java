@@ -64,8 +64,8 @@ public class Parser {
     }
 
     // The parenthesis should to verify line to line
-    private int openparenthesis = 0;
-    private int closeparenthesis = 0;
+    private int openparentheses = 0;
+    private int closeparentheses = 0;
 
 
     // The bracket should be verified at the final line
@@ -76,14 +76,18 @@ public class Parser {
     private boolean procWard = false; 
 
 	public boolean verifier(ArrayList<String> tokens) {
-        boolean okGrammar = true;
+        boolean okTokens = true;
+        boolean okParentheses = true;
         String text = "";
 		//This function will return true or false. 
 		//True if the grammar its ok and viceversa
 
         //add the variables to the language
         if(tokens.get(0).equals("var")){
-            return checkVarLine (tokens);
+
+            boolean checkVar =  checkVarLine (tokens);
+            return checkVar;
+
         }
 
         //add the name of the parameters to the language
@@ -103,12 +107,16 @@ public class Parser {
             if(reservedWordsVerifier(token)){
                 text += token+" ";
             }else{
-                okGrammar = false;
+                okTokens = false;
                 System.out.println("Failed token: "+token);
+                break;
             }
         }
+        okParentheses = checkParentheses();
         System.out.println(text);
-        return true;
+
+
+        return okTokens;
 	}
 
     public boolean reservedWordsVerifier(String token){
@@ -118,9 +126,9 @@ public class Parser {
         IMPORTANT -> Could be necessary use split() for spacings in token*/
         boolean okGrammar = true;
 
+        countParentheses(token);
         if (getReservedWord().contains(token) ||  lexer.getSeparator().contains(token) || getVariablesC().contains(token)) {
             okGrammar = true;
-
         } else {
             okGrammar = false;
         }
@@ -175,5 +183,28 @@ public class Parser {
         i+=1;
         }
         return isCorrect;
+    }
+
+    public void countParentheses(String parentheses){
+        //Check if is an openParentheses
+        if (parentheses.equals("(")) {
+            openparentheses += 1;
+        }
+        //Check if is an closeParentheses
+        if (parentheses.equals(")")) {
+            closeparentheses += 1;
+        }
+    }
+
+    public boolean checkParentheses() {
+        boolean okGrammar = true;
+        if (openparentheses == closeparentheses) {
+            okGrammar = true;
+            System.out.println("Parentheses are right");
+        } else {
+            okGrammar = false;
+            System.out.println("Parentheses aren't right");
+        }
+        return okGrammar;
     }
 }
