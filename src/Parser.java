@@ -162,7 +162,7 @@ public class Parser {
             }
 
             //with these 3 "if conditions" we will add all the tokens that belong to a procedure
-            if (token.equals("if") || token.equals("while")) {
+            if (token.equals("if") || token.equals("while") || token.equals("repeat")) {
                 addingToConditional = true;
             }
             if (addingToConditional) {
@@ -302,8 +302,7 @@ public class Parser {
         //Example: isValid(jump(5), 7) = [isValid, (, jump, (, 5, ), ",", 7, )]
 
 
-    private void verifierOfConditionsStructure(ArrayList<String> tokensList) {
-        //example: Walk(1) = [walk, (, 1, )]
+    private boolean verifierOfConditionsStructure(ArrayList<String> tokensList) {
         boolean okStructure = false;
         String[] numListParameter = {"walk", "jump", "drop", "grab", "get", "free", "pop"};
         String[] directions = {"front", "right", "left", "back"};
@@ -312,37 +311,46 @@ public class Parser {
         ArrayList<String> numParameter = new ArrayList<>();
         ArrayList<String> orientParameter = new ArrayList<>();
 
-        for (String orientation : orientParameter) {
+        for (String orientation : orientations) {
             orientParameter.add(orientation);
         }
-        for (String direction: dirParameter) {
+        for (String direction: directions) {
             dirParameter.add(direction);
         }
 
         for (String inst : numListParameter) {
             numParameter.add(inst);
         }
+        //example: Walk(1) = [walk, (, 1, )]
         //conditions with one parameter: walk, jump, veer, look, drop, grab, get, free, isfacing
         if (tokensList.size() == 4) {
             if (numParameter.contains(tokensList.get(0))) {
                 boolean isNumeric = isNumeric(tokensList.get(2));
                 if (isNumeric) {
                     okStructure = true;
+                } else {
+                    okStructure = false;
                 }
             }
             if (tokensList.get(0).equals("veer")) {
                 if (tokensList.get(2).equals("left") || tokensList.get(2).equals("right") || tokensList.get(2).equals("around")) {
                     okStructure = true;
+                } else {
+                    okStructure = false;
                 }
             }
             if (tokensList.get(0).equals("look")) {
                 if (orientParameter.contains(tokensList.get(2))) {
                     okStructure = true;
+                } else {
+                    okStructure = false;
                 }
             }
             if (tokensList.get(0).equals("isfacing")) {
                 if (orientParameter.contains(tokensList.get(2))){
                     okStructure = true;
+                } else {
+                    okStructure = false;
                 }
             }
         }
@@ -355,6 +363,8 @@ public class Parser {
                 boolean isNumeric2 = isNumeric(tokensList.get(4));
                 if (isNumeric1 == isNumeric2) {
                     okStructure = true;
+                } else {
+                    okStructure = false;
                 }
             }
             //Conditions of walk(d, n)
@@ -363,6 +373,8 @@ public class Parser {
                     boolean isNumeric = isNumeric(tokensList.get(4));
                     if (isNumeric) {
                         okStructure = true;
+                    } else {
+                        okStructure = false;
                     }
                 }
             }
@@ -372,15 +384,34 @@ public class Parser {
                     boolean isNumeric = isNumeric(tokensList.get(4));
                     if (isNumeric) {
                         okStructure = true;
+                    } else {
+                        okStructure = false;
                     }
                 }
             }
             //Conditions of isValid(ins, n)
         //Example: isValid(jump(5), 7) = [isValid, (, jump, (, 5, ), ",", 7, )]
-        if (tokensList.size() > 6) {
-            
+        if (tokensList.size() == 9) {
+            if (tokensList.get(0).equals("isValid")) {
+                if (numParameter.contains(tokensList.get(2))) {
+                    boolean isNumeric1 = isNumeric(tokensList.get(4));
+                    if (isNumeric1) {
+                        okStructure = true;
+                    }
+                    boolean isNumeric2 = isNumeric(tokensList.get(7));
+                    if (isNumeric2) {
+                        okStructure = true;
+                    }
+                    if (isNumeric1 == isNumeric2) {
+                        okStructure = true;
+                    } else {
+                        okStructure = false;
+                    }
+                }
+            }
         }
         }
+        return okStructure;
     }
 
     //This functions will be use to check if commands are correctly written
