@@ -34,56 +34,104 @@ public class Lexer {
     /*
      * 
      */
-    public void interpreter(Queue<String> strings, Parser parser){
-      //all of strings in the queue will iterate
+    public void interpreter(String string, Parser parser){
 
-      for (int i = 1 ; i<= strings.size(); i++){
+      ArrayList<String> toSentToParser = new ArrayList<String>();
+
+      // convert the chain into a char []
+      char[] chaintoarray = string.toCharArray();
         
-        // They are the array of tokens which we will sent to the parser
-        ArrayList<String> toSentToParser = new ArrayList<String>();
-        // get the head of the queue
-        String chain = strings.poll();
-        // convert the chain into a char []
-        char[] chaintoarray = chain.toCharArray();
-        
-        //This temp will be contains an incompleted token, until that we found an separator
-        String temp = "";
 
-        // iterate the char[], one iteration is one character in the chain
-        for (char character : chaintoarray){
+      //This temp will be contains an incompleted token, until that we found an separator
+      String temp = "";
 
-          // convert char to string
-          String toCompare = String.valueOf(character);
-
-          // review if the character is an separator
-          if (!separators.contains(toCompare)){
-            // if is not a separator, the character will be concatenate with something
-            temp = temp + toCompare;
-          }else{
-            // if the character is a separator, temp should be a token 
-            
+      // iterate the char[], one iteration is one character in the chain
+      for (char character : chaintoarray){
 
 
-            // first, we will be sure of  temp is not empty, because you can have " " before to start an code line
-            if (temp != ""){  
-              toSentToParser.add(temp);
-              temp = "";
 
-            }
+        // convert char to string
+        String toCompare = String.valueOf(character);
 
-            //then, if the separator is not a " " , they must stay into the array
-            if (!toCompare.equals(" ")){
-              toSentToParser.add(toCompare);
+        // review if the character is an separator
+        if (!separators.contains(toCompare)){
+          // if is not a separator, the character will be concatenate with something
+          temp = temp + toCompare;
+        }else{
+          // if the character is a separator, temp should be a token 
+          // first, we will be sure of  temp is not empty, because you can have " " before to start an code line
+          if (temp != ""){  
+          toSentToParser.add(temp);
+          temp = "";
+          }
+
+          //then, if the separator is not a " " , they must stay into the array
+          if (!toCompare.equals(" ")){
+            toSentToParser.add(toCompare);
             }            
+          }
+        }
+
+        separator(toSentToParser,parser);
+      }
+
+
+      private void separator(ArrayList<String> tokens, Parser parser){
+        ArrayList<String> finalBlock = new ArrayList<String>();
+        boolean isProc = false;
+        int openBracket = 0;
+        for (String token : tokens){
+          token = token.trim();
+
+
+          if (isProc == true){
+              if (token.equals("CORP")){
+                finalBlock.add(token);
+                parser.verifier(finalBlock);               
+                finalBlock.clear();
+                isProc = false;
+              }else{
+                finalBlock.add(token);
+              }
+          }else if (openBracket > 0){
+              if (token.equals("}")){
+                openBracket --;
+                finalBlock.add(token);
+                  if(openBracket == 0){
+                    parser.verifier(finalBlock);
+                    finalBlock.clear();
+                  }
+              }else if(token.equals("{")){
+                openBracket++;
+                finalBlock.add(token);
+              }else{
+                finalBlock.add(token);
+              }
+          }else if (token.equals("PROC")){
+              finalBlock.add(token);
+              isProc = true;
+          }else if (token.equals("{")){
+              finalBlock.add(token);
+              openBracket ++;
+          }else if (token.equals(";")){
+              finalBlock.add(token);
+              parser.verifier(finalBlock);
+
+              finalBlock.clear();
+          }else{
+              finalBlock.add(token);
           }
 
         }
-
-        // HERE THE ARRAY WILL BE SENT TO A PARSER
-        parser.verifier(toSentToParser);
       }
 
+      // private void printTest(ArrayList<String> imprimir){
+      //   System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++");
+      //   for (String imprimirxd : imprimir){
+      //     System.out.println(imprimirxd);
+      //   }
+      // }
     }
-    }
+    
 
 

@@ -12,35 +12,28 @@ public class Lector {
      * @return queue that contains all of the lines of the program
      * Than method will be used if prog/gorp is always used
      */
-    public Queue<String> readprog(String route){
-
-        Queue<String> strings = new LinkedList<String>();
-        /* QUEUE: 
-        To add .add
-        To get .poll
-        To clean .clear
-        To get without delete head of queue .peek
-        */
-
+    public String readprog(String route){
+        String cadenaFinal = "";
+        String temp;
         try{
             BufferedReader bf = new BufferedReader(new FileReader(route));
-            String temp = "";
             while(!(temp = bf.readLine()).equals("GORP")){
                 if (!temp.equals("PROG") && !temp.equals("")){
-                    strings.add(temp);
-                }   
+                    cadenaFinal = cadenaFinal + " " + temp;
+                }
             }
         }catch(Exception e){
             //Nada
         }
-        return strings;
+
+        return cadenaFinal;
     }
 
     /**
      * This method will be send the chains to lexer.
      * @param chains the chains which has already read by the methos
      */
-    public void sentToLexer(Queue<String> chains, Lexer lex, Parser parser){
+    public void sentToLexer(String chains, Lexer lex, Parser parser){
 
         lex.interpreter(chains, parser);
 
