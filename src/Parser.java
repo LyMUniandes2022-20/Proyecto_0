@@ -9,13 +9,15 @@ public class Parser {
     private ArrayList<String> instructionsList = new ArrayList<>();
     private ArrayList<String> conditionalsList = new ArrayList<>();
     private ArrayList<String> conditionsList = new ArrayList<>();
+    private ArrayList<String> reservedWords = new ArrayList<String>();
+    private ArrayList<String> separators = new ArrayList<String> ();
 
     public Parser(){
-        lexer = new Lexer();
         setReservedWords();
         setInstructionsList();
         setConditionsList();
         setConditionalList();
+        setSeparators();
     }
 
     public void setConditionsList(){
@@ -60,11 +62,11 @@ public class Parser {
     public ArrayList<String> getInstructionsList(){
         return instructionsList;
     }
+    
     public ArrayList<String> getVariablesC(){
         return variablesCreated;
     }
 
-    private ArrayList<String> reservedWords = new ArrayList<String>();
     public void setReservedWords() {
         reservedWords.add("var");
         reservedWords.add("PROC"); //Not yet
@@ -113,6 +115,17 @@ public class Parser {
         return reservedWords;
     }
 
+    public void setSeparators(){
+      separators.add(" ");
+      separators.add("(");
+      separators.add(")");
+      separators.add("=");
+      separators.add(",");
+      separators.add("{");
+      separators.add("}");
+      separators.add(";");
+    }
+
     // The parenthesis should to verify line to line
     private int openparentheses = 0;
     private int closeparentheses = 0;
@@ -130,11 +143,18 @@ public class Parser {
         boolean okConditionals = true;
         String text = "";
 
-        //add the variables to the language
+        //If the block are VAR 
         if(tokens.get(0).equals("var")){
             boolean checkVar =  checkVarLine (tokens);
             return checkVar;
         }
+
+        //If the block are PROC
+        if(tokens.get(0).equals("PROC")){
+            boolean checkProc = checkBlockProc(tokens);
+            return checkProc;
+        }
+
         //add the name of the parameters to the language
         if(tokens.get(0).equals("PROC")){
             for (int i = 3; i < tokens.size(); i++) {                
@@ -264,9 +284,105 @@ public class Parser {
         boolean okBlockProc = false;
         if (blockOfTokens.get(0).equals("PROC") && blockOfTokens.get(blockOfTokens.size()-1).equals("CORP")) {
             okBlockProc = true;
+        } else {
+            return okBlockProc;
+        }
+
+        if (separators.contains(blockOfTokens.get(1)) || reservedWords.contains(blockOfTokens.get(1))) {
+            return okBlockProc;
+        } else {
+            reservedWords.add(blockOfTokens.get(1));
+            okBlockProc = true;
+        }
+
+        blockOfTokens.remove(0);
+        blockOfTokens.remove(1);
+        blockOfTokens.remove(-1);
+
+        ArrayList<String> parenthesisCheck = new ArrayList<String>();
+        if (!blockOfTokens.get(0).equals("(")){
+            return okBlockProc;
+        }else{
+            for(int i = 0; i < blockOfTokens.size(); i++){
+                if (blockOfTokens.get(i).equals(")")) {
+                    parenthesisCheck.add(blockOfTokens.get(i));
+                    break;
+                } else {
+                    parenthesisCheck.add(blockOfTokens.get(i));
+                }
+            }
+        }
+
+        if(parenthesisCheck.size() == blockOfTokens.size()){
+            return okBlockProc;
+        }else{
+            parenthesisCheck.remove(0);
+            parenthesisCheck.remove(-1);
+            for (int i = 1; i < parenthesisCheck.size(); i++) {
+                if (!parenthesisCheck.get(i).equals(",")){
+                    return okBlockProc;
+                }
+                i+=1;
+            }
+            for (int i = 0; i < parenthesisCheck.size(); i++) {
+                if(parenthesisCheck.get(i) != ","){
+                    addVariables(parenthesisCheck.get(i));
+                    i ++;
+                }else{
+                    return okBlockProc;
+                }      
+            }
+        }
+
+        for (int i = 0; i < blockOfTokens.size(); i++) {
+            if (blockOfTokens.get(i).equals(")")) {
+                break;
+            } else {
+                blockOfTokens.remove(i);
+            }
+
+            if(checkBlock(blockOfTokens)){
+                return true;
+            }else{
+                return false;
+            }
+
         }
         return okBlockProc;
+        }
+
+    private boolean checkBlock(ArrayList<String> blockToVerify){
+        boolean okBlock = false;
+        if (blockToVerify.get(0).equals("{") && blockToVerify.get(blockToVerify.size()-1).equals("}")) {
+            okBlock = true;
+            blockToVerify.remove(0);
+            blockToVerify.remove(-1);
+
+            ArrayList<String> instructionToVerify = new ArrayList<String>();
+            for(String token : blockToVerify){
+                if (token.equals(";") || token.equals("od") || token.equals("fi") || token.equals("per")){
+                    /*if(false){
+                        return okBlock;
+                    }else{
+                        return true;
+                    }*/
+                }else{
+                    instructionToVerify.add(token);
+                }
+            }
+                /*if(false){
+                    return okBlock;
+                }else{
+                    return true;
+                }*/          
+        } else {
+            return okBlock;
+        }
+        return okBlock;
     }
+        
+
+
 
     public boolean checkConditionals(ArrayList<String> tokenConditionals){
         boolean okConditionals = false;
