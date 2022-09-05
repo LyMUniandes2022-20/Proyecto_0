@@ -80,6 +80,7 @@ public class Lexer {
         }
 
         // HERE THE ARRAY WILL BE SENT TO A PARSER
+        //HERE WE CONCLUDE IF THE PROGRAM ITS OK
         parser.verifier(toSentToParser);
       }
 
