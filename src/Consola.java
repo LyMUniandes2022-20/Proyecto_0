@@ -14,10 +14,8 @@ public class Consola {
         Lexer lex = new Lexer();
         Parser parser = new Parser();
         consola.setLex(lex);
-        reader.sentToLexer(reader.readprog("data\\program.txt"), lex, parser);
-
-
-
+        boolean answer = reader.sentToLexer(reader.readprog("data\\program.txt"), lex, parser);
+        System.out.println("La grámatica es: " + answer);
     }
     
 

@@ -20,7 +20,6 @@ PROC goWest()
 }CORP
 
 {
-go(3,3);
 n=6;
 putCB(2,1)
 

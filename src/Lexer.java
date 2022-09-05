@@ -34,8 +34,8 @@ public class Lexer {
     /*
      * 
      */
-    public void interpreter(String string, Parser parser){
-
+    public boolean interpreter(String string, Parser parser){
+      boolean okGrammar = false;
       ArrayList<String> toSentToParser = new ArrayList<String>();
 
       // convert the chain into a char []
@@ -72,11 +72,13 @@ public class Lexer {
           }
         }
 
-        separator(toSentToParser,parser);
+        okGrammar = separator(toSentToParser,parser);
+        return okGrammar;
       }
 
 
-      private void separator(ArrayList<String> tokens, Parser parser){
+      private boolean separator(ArrayList<String> tokens, Parser parser){
+        boolean parserAnswer = false;
         ArrayList<String> finalBlock = new ArrayList<String>();
         boolean isProc = false;
         int openBracket = 0;
@@ -87,7 +89,10 @@ public class Lexer {
           if (isProc == true){
               if (token.equals("CORP")){
                 finalBlock.add(token);
-                parser.verifier(finalBlock);               
+                parserAnswer = parser.verifier(finalBlock);               
+                if (parserAnswer == false) {
+                  return parserAnswer;
+                }
                 finalBlock.clear();
                 isProc = false;
               }else{
@@ -98,7 +103,10 @@ public class Lexer {
                 openBracket --;
                 finalBlock.add(token);
                   if(openBracket == 0){
-                    parser.verifier(finalBlock);
+                    parserAnswer = parser.verifier(finalBlock);
+                    if (parserAnswer == false) {
+                      return parserAnswer;
+                    }
                     finalBlock.clear();
                   }
               }else if(token.equals("{")){
@@ -115,7 +123,10 @@ public class Lexer {
               openBracket ++;
           }else if (token.equals(";")){
               finalBlock.add(token);
-              parser.verifier(finalBlock);
+              parserAnswer = parser.verifier(finalBlock);
+              if (parserAnswer == false) {
+                return parserAnswer;
+              }
 
               finalBlock.clear();
           }else{
@@ -123,6 +134,7 @@ public class Lexer {
           }
 
         }
+        return parserAnswer;
       }
 
       // private void printTest(ArrayList<String> imprimir){

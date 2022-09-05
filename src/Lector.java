@@ -33,11 +33,10 @@ public class Lector {
      * This method will be send the chains to lexer.
      * @param chains the chains which has already read by the methos
      */
-    public void sentToLexer(String chains, Lexer lex, Parser parser){
-
-        lex.interpreter(chains, parser);
-
-
+    public boolean sentToLexer(String chains, Lexer lex, Parser parser){
+        boolean finalAnswer = false;
+        finalAnswer = lex.interpreter(chains, parser);
+        return finalAnswer;
     }
 
 

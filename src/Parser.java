@@ -11,6 +11,7 @@ public class Parser {
     private ArrayList<String> conditionsList = new ArrayList<>();
     private ArrayList<String> reservedWords = new ArrayList<String>();
     private ArrayList<String> separators = new ArrayList<String> ();
+    private ArrayList<String> newInstructions = new ArrayList<String> ();
 
     public Parser(){
         setReservedWords();
@@ -141,6 +142,7 @@ public class Parser {
         boolean okParentheses = true;
         boolean okBlockProc = true;
         boolean okConditionals = true;
+        boolean okBlock = false;
         String text = "";
 
         //If the block are VAR 
@@ -154,20 +156,6 @@ public class Parser {
             boolean checkProc = checkBlockProc(tokens);
             return checkProc;
         }
-        //add the name of the parameters to the language
-        if(tokens.get(0).equals("PROC")){
-            for (int i = 3; i < tokens.size(); i++) {                
-                if(lexer.getSeparator().contains(tokens.get(i))){
-                    break;
-                } else {
-                    addVariables(tokens.get(i));
-                    i+=1;
-                }
-            }
-            okBlockProc = checkBlockProc(tokens);
-        }
-        //To check that the structure of conditionals are ok
-
         //Iteration of the array to verify if all tokens are in the lenguage
         boolean addingToConditional = false;
         ArrayList<String> tokensConditional = new ArrayList<>();
@@ -191,6 +179,11 @@ public class Parser {
                 addingToConditional = false;
             }
         }
+
+        if (tokens.get(0).equals("{")) {
+            okBlock = checkBlock(tokens);
+            return okBlock;
+        }
         okConditionals = checkConditionals(tokensConditional);
         okParentheses = checkParentheses();
         System.out.println(text);
@@ -206,7 +199,7 @@ public class Parser {
         boolean okGrammar = true;
 
         countParentheses(token);
-        if (getReservedWord().contains(token) ||  lexer.getSeparator().contains(token) || getVariablesC().contains(token)) {
+        if (getReservedWord().contains(token) ||  separators.contains(token) || getVariablesC().contains(token)) {
             okGrammar = true;
         } else {
             okGrammar = false;
@@ -281,6 +274,12 @@ public class Parser {
     //This function will aprove if a procedure starts with PROC and ends with CORP
     public boolean checkBlockProc(ArrayList<String> blockOfTokens){
         boolean okBlockProc = false;
+        ArrayList<String> newConditional = new ArrayList<>();
+        for (int i = 0; i < blockOfTokens.size(); i++) {
+            if (blockOfTokens.get(i).equals("PROC") == false) {
+                newConditional.add(blockOfTokens.get(i));
+            }
+        }
         if (blockOfTokens.get(0).equals("PROC") && blockOfTokens.get(blockOfTokens.size()-1).equals("CORP")) {
             okBlockProc = true;
         } else {
@@ -291,12 +290,15 @@ public class Parser {
             return okBlockProc;
         } else {
             reservedWords.add(blockOfTokens.get(1));
+            newInstructions.add(blockOfTokens.get(1));
+            
+            checkConditionals(blockOfTokens);
             okBlockProc = true;
         }
 
         blockOfTokens.remove(0);
         blockOfTokens.remove(1);
-        blockOfTokens.remove(-1);
+        blockOfTokens.remove(blockOfTokens.size()-1);
 
         ArrayList<String> parenthesisCheck = new ArrayList<String>();
         if (!blockOfTokens.get(0).equals("(")){
@@ -360,20 +362,15 @@ public class Parser {
             ArrayList<String> instructionToVerify = new ArrayList<String>();
             for(String token : blockToVerify){
                 if (token.equals(";") || token.equals("od") || token.equals("fi") || token.equals("per")){
-                    /*if(false){
-                        return okBlock;
-                    }else{
-                        return true;
-                    }*/
+                    if (!token.equals(";")) {
+                        blockToVerify.add(token);
+                    }
+                    okBlock = verifierOfConditionsStructure(blockToVerify);
                 }else{
                     instructionToVerify.add(token);
                 }
             }
-                /*if(false){
-                    return okBlock;
-                }else{
-                    return true;
-                }*/          
+            okBlock = verifierOfConditionsStructure(instructionToVerify);     
         } else {
             return okBlock;
         }
@@ -391,7 +388,7 @@ public class Parser {
         for (String token : tokenConditionals) {
             countParentheses(token);
             countBrackets(token);
-            if (conditionsList.contains(token) || instructionsList.contains(token)) {
+            if (conditionsList.contains(token) || instructionsList.contains(token) || newInstructions.contains(token)) {
                 addingConditionStructure = true;
                 if (token.equals("isValid")) {
                     toIsValid = true;
