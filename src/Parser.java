@@ -181,13 +181,13 @@ public class Parser {
             }
 
             //with these 3 "if conditions" we will add all the tokens that belong to a procedure
-            if (token.equals("if") || token.equals("while") || token.equals("repeat")) {
+            if (token.equals("if") || token.equals("while") || token.equals("repeatTimes")) {
                 addingToConditional = true;
             }
             if (addingToConditional) {
                 tokensConditional.add(token);
             }
-            if (token.equals("fi") || token.equals("od")) {
+            if (token.equals("fi") || token.equals("od") || token.equals("per")) {
                 addingToConditional = false;
             }
         }
