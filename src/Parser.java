@@ -160,6 +160,9 @@ public class Parser {
         boolean addingToConditional = false;
         ArrayList<String> tokensConditional = new ArrayList<>();
 		for (String token : tokens) {
+            if (isNumeric(token)) {
+                reservedWords.add(token);
+            }
             if(reservedWordsVerifier(token)){
                 text += token+" ";
             }
@@ -274,12 +277,6 @@ public class Parser {
     //This function will aprove if a procedure starts with PROC and ends with CORP
     public boolean checkBlockProc(ArrayList<String> blockOfTokens){
         boolean okBlockProc = false;
-        ArrayList<String> newConditional = new ArrayList<>();
-        for (int i = 0; i < blockOfTokens.size(); i++) {
-            if (blockOfTokens.get(i).equals("PROC") == false) {
-                newConditional.add(blockOfTokens.get(i));
-            }
-        }
         if (blockOfTokens.get(0).equals("PROC") && blockOfTokens.get(blockOfTokens.size()-1).equals("CORP")) {
             okBlockProc = true;
         } else {
@@ -291,7 +288,6 @@ public class Parser {
         } else {
             reservedWords.add(blockOfTokens.get(1));
             newInstructions.add(blockOfTokens.get(1));
-            
             checkConditionals(blockOfTokens);
             okBlockProc = true;
         }
@@ -357,7 +353,7 @@ public class Parser {
         if (blockToVerify.get(0).equals("{") && blockToVerify.get(blockToVerify.size()-1).equals("}")) {
             okBlock = true;
             blockToVerify.remove(0);
-            blockToVerify.remove(-1);
+            blockToVerify.remove(blockToVerify.size()-1);
 
             ArrayList<String> instructionToVerify = new ArrayList<String>();
             for(String token : blockToVerify){
@@ -468,7 +464,7 @@ public class Parser {
         }
         //example: canWalk(north,1) = [canWalk, (, north, ",", 1, )]
         //conditions with two parameters: jumpTo, walk, isValid, canWalk
-        if (tokensList.size() == 6) {
+        if (tokensList.size() <= 6) {
             //Conditions of jumpTo(n,n)
             if (tokensList.get(0).equals("jumpTo")) {
                 boolean isNumeric1 = isNumeric(tokensList.get(2));
@@ -503,7 +499,7 @@ public class Parser {
             }
             //Conditions of isValid(ins, n)
         //Example: isValid(jump(5), 7) = [isValid, (, jump, (, 5, ), ",", 7, )]
-        if (tokensList.size() == 9) {
+        if (tokensList.size() >= 9) {
             if (tokensList.get(0).equals("isValid")) {
                 if (numParameter.contains(tokensList.get(2))) {
                     boolean isNumeric1 = isNumeric(tokensList.get(4));
@@ -519,6 +515,18 @@ public class Parser {
                     } else {
                         okStructure = false;
                     }
+                }
+            }
+        }
+        if (newInstructions.contains(tokensList.get(0))) {
+            for (int i = 2; i < tokensList.size(); i++) {
+                boolean isNumeric = isNumeric( tokensList.get(i));
+                i +=1;
+                if (isNumeric) {
+                    okStructure = true;
+                } else{
+                    okStructure = true;
+                    break;
                 }
             }
         }
